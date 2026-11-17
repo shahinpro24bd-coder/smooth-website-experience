@@ -198,7 +198,7 @@ export function HomeContent() {
               <div className="abm-media">
                 <div className="abm-frame rv" style={{ ["--d" as string]: "0ms" }}>
                   <div className="abm-frame-inner">
-                    <SiteVideo className="abm-video" mp4={custom(get("home.about.video", ""), legacyAboutVideo.url) || aboutVideoAsset.url} poster={custom(get("home.about.img1", ""), legacyAboutPoster.url) || aboutPosterAsset.url} />
+                    <SiteVideo eager className="abm-video" mp4={custom(get("home.about.video", ""), legacyAboutVideo.url) || aboutVideoAsset.url} poster={custom(get("home.about.img1", ""), legacyAboutPoster.url) || aboutPosterAsset.url} />
                     <span className="abm-scan" aria-hidden="true" />
                     <span className="abm-live"><span className="abm-live-dot" /> <T k="home.about.live" d="On Site · UAE" line /></span>
                     <div className="abm-hud" ref={hudRef}>

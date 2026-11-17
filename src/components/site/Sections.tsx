@@ -97,7 +97,7 @@ export function ServicesGrid() {
 
 // Sections start their entrance slightly before they scroll into view, so content is already
 // showing when the visitor reaches it instead of popping in late.
-export const REVEAL_MARGIN = "0px 0px 25% 0px";
+export const REVEAL_MARGIN = "0px 0px 40% 0px";
 
 // Adds "is-in" once the element nears the viewport, so CSS can play its entrance animation.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

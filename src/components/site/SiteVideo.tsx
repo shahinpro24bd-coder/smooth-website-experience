@@ -31,12 +31,14 @@ type Props = {
   poster?: string | undefined;
   className?: string;
   priority?: boolean;
+  /** Buffer straight away alongside the hero instead of waiting for it (small clips right below the hero). */
+  eager?: boolean;
   /** false = the caller controls play/pause (e.g. the footer clip). */
   autoPlay?: boolean;
   videoRef?: Ref<HTMLVideoElement>;
 };
 
-export function SiteVideo({ mp4, av1, mobile, poster, className, priority = false, autoPlay = true, videoRef }: Props) {
+export function SiteVideo({ mp4, av1, mobile, poster, className, priority = false, eager = false, autoPlay = true, videoRef }: Props) {
   const own = useRef<HTMLVideoElement | null>(null);
   const setRef = (el: HTMLVideoElement | null) => {
     own.current = el;
@@ -57,7 +59,7 @@ export function SiteVideo({ mp4, av1, mobile, poster, className, priority = fals
     }
     let alive = true;
     let io: IntersectionObserver | undefined;
-    void priorityReady.then(() => {
+    void (eager ? Promise.resolve() : priorityReady).then(() => {
       if (!alive) return;
       v.preload = "auto";
       if (!autoPlay) { v.load(); return; }
@@ -71,7 +73,7 @@ export function SiteVideo({ mp4, av1, mobile, poster, className, priority = fals
       if (v.readyState < 2) v.load();
     });
     return () => { alive = false; io?.disconnect(); };
-  }, [priority, autoPlay, mp4, av1, mobile]);
+  }, [priority, eager, autoPlay, mp4, av1, mobile]);
 
   return (
     <video
@@ -83,7 +85,7 @@ export function SiteVideo({ mp4, av1, mobile, poster, className, priority = fals
       loop
       playsInline
       autoPlay={priority}
-      preload={priority ? "auto" : "metadata"}
+      preload={priority || eager ? "auto" : "metadata"}
       aria-hidden="true"
     >
       {mobile && <source src={mobile} type="video/mp4" media="(max-width: 767.98px)" />}
