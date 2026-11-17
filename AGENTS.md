@@ -29,6 +29,7 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 - Site photos and videos are Lovable asset pointers in src/assets (*.asset.json); import the pointer and use .url, so media loads from this project's CDN rather than from public/.
+- Builds outside Lovable (e.g. Vercel) rewrite *.asset.json urls to absolute Lovable-host URLs via the qmep:absolute-media-urls plugin in vite.config.ts (host overridable with MEDIA_ORIGIN), because the relative /__l5e path is only served by Lovable hosting.
 - Every site video renders its src immediately with preload="auto" and a poster (never gate src on scroll), so clips are ready before the visitor reaches them.
 - Scroll entrances (useInView, Reveal, About) share REVEAL_MARGIN from Sections.tsx and start before a section enters the viewport; entrance delays are scaled by the --rv-pace CSS variable, so tune speed there rather than per element.
 - The site reads its content and admin data from the existing QMEP backend configured in .env (public URL + publishable key only); never put secret keys there.
