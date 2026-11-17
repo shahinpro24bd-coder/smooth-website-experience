@@ -20,6 +20,11 @@ import heroPosterAsset from "@/assets/hero-poster.webp.asset.json";
 import { T, Img, useEditable } from "@/lib/editable";
 
 
+// About background circuit: grid rows/columns (64px cells) that carry travelling light pulses, and junction nodes that ping.
+const ABM_ROWS = [{ r: 1, t: "7s", dl: "0s" }, { r: 4, t: "9s", dl: "-3s" }, { r: 7, t: "6.5s", dl: "-5s" }, { r: 10, t: "8s", dl: "-1.5s" }, { r: 13, t: "10s", dl: "-6s" }];
+const ABM_COLS = [{ c: 1, t: "7.5s", dl: "-2s" }, { c: 4, t: "6s", dl: "-4s" }, { c: 9, t: "8.5s", dl: "-1s" }, { c: 14, t: "7s", dl: "-5s" }, { c: 18, t: "9s", dl: "-3s" }, { c: 22, t: "6.5s", dl: "-0.5s" }];
+const ABM_NODES = [{ r: 1, c: 9, dl: "0s" }, { r: 4, c: 1, dl: "-.8s" }, { r: 4, c: 18, dl: "-2.2s" }, { r: 7, c: 14, dl: "-1.4s" }, { r: 10, c: 4, dl: "-2.8s" }, { r: 10, c: 22, dl: "-.4s" }, { r: 13, c: 9, dl: "-1.9s" }];
+
 const aboutTitle = "Engineering Experience. Proven Performance. Trusted Delivery.";
 
 const tabs = [
@@ -169,13 +174,13 @@ export function HomeContent() {
         <div className="abm-grid" aria-hidden="true" />
         <div className="abm-glow" aria-hidden="true" />
         <div className="abm-flow" aria-hidden="true">
-          {[{ r: 2, t: "8s", dl: "0s" }, { r: 5, t: "11s", dl: "-4s" }, { r: 9, t: "9.5s", dl: "-7s" }, { r: 12, t: "12s", dl: "-2s" }].map((l) => (
-            <span key={`h${l.r}`} className="abm-flow-h" style={{ ["--r" as string]: l.r, ["--t" as string]: l.t, ["--dl" as string]: l.dl }} />
+          {ABM_ROWS.map((l) => (
+            <span key={`h${l.r}`} className="abm-flow-h" style={{ ["--r" as string]: l.r, ["--t" as string]: l.t, ["--dl" as string]: l.dl }}><i className="abm-pulse" /></span>
           ))}
-          {[{ c: 2, t: "10s", dl: "-3s" }, { c: 6, t: "8.5s", dl: "-6s" }, { c: 11, t: "12s", dl: "-1s" }, { c: 16, t: "9s", dl: "-5s" }].map((l) => (
-            <span key={`v${l.c}`} className="abm-flow-v" style={{ ["--c" as string]: l.c, ["--t" as string]: l.t, ["--dl" as string]: l.dl }} />
+          {ABM_COLS.map((l) => (
+            <span key={`v${l.c}`} className="abm-flow-v" style={{ ["--c" as string]: l.c, ["--t" as string]: l.t, ["--dl" as string]: l.dl }}><i className="abm-pulse" /></span>
           ))}
-          {[{ r: 2, c: 6, dl: "0s" }, { r: 9, c: 2, dl: "-1.5s" }, { r: 5, c: 11, dl: "-3s" }, { r: 12, c: 16, dl: "-2s" }].map((n) => (
+          {ABM_NODES.map((n) => (
             <span key={`n${n.r}-${n.c}`} className="abm-node" style={{ ["--r" as string]: n.r, ["--c" as string]: n.c, ["--dl" as string]: n.dl }} />
           ))}
         </div>

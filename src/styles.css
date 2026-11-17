@@ -1355,27 +1355,41 @@ small, .small { color: #5A6472; }
 .abm-specs::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, var(--primary), var(--abm-cyan) 40%, var(--abm-line) 70%);
   transform-origin: left; transform: scaleX(clamp(0, calc((var(--abp) - .2) * 2.6), 1)); }
 
-/* Clean background motion: light pulses travel along the grid lines, a few nodes breathe, the glow slowly drifts.
+/* Clean background motion: a faint circuit of grid tracks; comet-like light pulses travel along them and junction nodes ping.
    Transform/opacity only; the layer follows the grid's scroll offset so pulses stay on the lines. */
-.abm-flow { position: absolute; inset: 0; pointer-events: none; will-change: transform; translate: 0 calc(var(--abp) * 128px);
-  mask-image: radial-gradient(ellipse 75% 65% at 30% 45%, #000 0%, transparent 78%); -webkit-mask-image: radial-gradient(ellipse 75% 65% at 30% 45%, #000 0%, transparent 78%); }
+.abm-flow { position: absolute; inset: 0; pointer-events: none; translate: 0 calc(var(--abp) * 128px);
+  --abm-m1: radial-gradient(ellipse 95% 85% at 50% 50%, #000 45%, transparent 100%);
+  --abm-m2: linear-gradient(90deg, #000 47%, rgba(0,0,0,.5) 53%, rgba(0,0,0,.5) 93%, #000 100%); /* softer behind the copy text */
+  mask-image: var(--abm-m1), var(--abm-m2); mask-composite: intersect;
+  -webkit-mask-image: var(--abm-m1), var(--abm-m2); -webkit-mask-composite: source-in; }
+@media (max-width: 991.98px) { .abm-flow { mask-image: var(--abm-m1); -webkit-mask-image: var(--abm-m1); } }
 .abm-flow-h, .abm-flow-v { position: absolute; overflow: hidden; }
-.abm-flow-h { left: 0; right: 0; height: 1px; top: calc(64px * var(--r)); }
-.abm-flow-v { top: 0; bottom: 0; width: 1px; left: calc(64px * var(--c)); }
-.abm-flow-h::after, .abm-flow-v::after { content: ""; position: absolute; will-change: transform; animation-timing-function: linear; animation-iteration-count: infinite;
-  animation-duration: var(--t, 9s); animation-delay: var(--dl, 0s); }
-.abm-flow-h::after { left: 0; top: 0; width: 16%; height: 1px; transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(0,180,255,.85), transparent); animation-name: abmFlowX; }
-.abm-flow-v::after { top: 0; left: 0; width: 1px; height: 22%; transform: translateY(-100%);
-  background: linear-gradient(180deg, transparent, rgba(30,99,214,.75), transparent); animation-name: abmFlowY; }
-.abm-node { position: absolute; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%; top: calc(64px * var(--r)); left: calc(64px * var(--c));
-  background: var(--abm-cyan); box-shadow: 0 0 0 4px rgba(0,180,255,.14); opacity: .25; animation: abmNode 4.5s ease-in-out infinite; animation-delay: var(--dl, 0s); }
+.abm-flow-h { left: 0; right: 0; height: 12px; margin-top: -6px; top: calc(64px * var(--r)); }
+.abm-flow-v { top: 0; bottom: 0; width: 12px; margin-left: -6px; left: calc(64px * var(--c)); }
+/* the static track */
+.abm-flow-h::before, .abm-flow-v::before { content: ""; position: absolute; background: rgba(30,99,214,.13); }
+.abm-flow-h::before { left: 0; right: 0; top: 50%; height: 1px; }
+.abm-flow-v::before { top: 0; bottom: 0; left: 50%; width: 1px; }
+/* the travelling pulse: fading tail + bright glowing head */
+.abm-pulse { position: absolute; display: block; will-change: transform; animation: var(--abm-anim) var(--t, 8s) linear infinite; animation-delay: var(--dl, 0s); }
+.abm-flow-h .abm-pulse { --abm-anim: abmFlowX; left: 0; top: 50%; width: 22%; height: 2px; margin-top: -1px; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(30,99,214,.35) 55%, var(--abm-cyan)); }
+.abm-flow-v .abm-pulse { --abm-anim: abmFlowY; top: 0; left: 50%; width: 2px; height: 26%; margin-left: -1px; transform: translateY(-100%);
+  background: linear-gradient(180deg, transparent, rgba(30,99,214,.35) 55%, var(--abm-cyan)); }
+.abm-pulse::after { content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #E9F8FF;
+  box-shadow: 0 0 0 2px rgba(0,180,255,.35), 0 0 12px 3px rgba(0,180,255,.75); }
+.abm-flow-h .abm-pulse::after { right: -3px; top: -2px; }
+.abm-flow-v .abm-pulse::after { bottom: -3px; left: -2px; }
+/* junction nodes: solid dot + expanding ring */
+.abm-node { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; top: calc(64px * var(--r)); left: calc(64px * var(--c));
+  background: #FFFFFF; border: 2px solid var(--abm-cyan); box-shadow: 0 0 10px rgba(0,180,255,.55); }
+.abm-node::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%;
+  border: 1.5px solid var(--abm-cyan); opacity: 0; animation: abmPing 3.2s cubic-bezier(.2,.7,.3,1) infinite; animation-delay: var(--dl, 0s); will-change: transform, opacity; }
 .abm-glow { animation: abmGlow 14s ease-in-out infinite; will-change: transform, opacity; }
-@keyframes abmFlowX { to { transform: translateX(625%); } }
-@keyframes abmFlowY { to { transform: translateY(455%); } }
-@keyframes abmNode { 0%, 100% { opacity: .2; transform: scale(.7); } 50% { opacity: .9; transform: scale(1); } }
+@keyframes abmFlowX { to { transform: translateX(calc(100% / .22)); } }
+@keyframes abmFlowY { to { transform: translateY(calc(100% / .26)); } }
+@keyframes abmPing { 0% { opacity: .9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(4.5); } }
 @keyframes abmGlow { 0%, 100% { opacity: .75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
-@media (max-width: 767.98px) { .abm-flow-v:nth-of-type(n+3) { display: none; } }
 
 /* Title: words rise out of a mask one after another */
 .abm-title-split .abm-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
