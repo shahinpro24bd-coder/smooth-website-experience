@@ -337,7 +337,8 @@ function BackToTop() {
   const [show, setShow] = useState(false);
   useEffect(() => {
     const on = () => setShow(window.scrollY > 300);
-    window.addEventListener("scroll", on);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
@@ -356,7 +357,29 @@ function BackToTop() {
   );
 }
 
+/** Pause looping CSS animations in sections that are far off screen, so only what the visitor sees
+ *  is animating — keeps scrolling smooth. Uses the Web Animations API (no DOM attributes), so it
+ *  never disturbs hydration; one-off entrance animations are left alone. */
+function usePauseOffscreen() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined" || typeof document.getAnimations !== "function") return;
+    const loops = (el: Element) => el.getAnimations({ subtree: true }).filter((an) => an.effect?.getComputedTiming().iterations === Infinity);
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) for (const an of loops(e.target)) {
+        if (e.isIntersecting) { if (an.playState === "paused") an.play(); } else if (an.playState === "running") an.pause();
+      }
+    }, { rootMargin: "60% 0px 60% 0px" });
+    const seen = new WeakSet<Element>();
+    const scan = () => document.querySelectorAll("section, .band, footer").forEach((el) => { if (!seen.has(el)) { seen.add(el); io.observe(el); } });
+    const t1 = window.setTimeout(scan, 800);
+    const t2 = window.setTimeout(scan, 2500);
+    return () => { window.clearTimeout(t1); window.clearTimeout(t2); io.disconnect(); };
+  }, [pathname]);
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
+  usePauseOffscreen();
   return (
     <>
       <Topbar />

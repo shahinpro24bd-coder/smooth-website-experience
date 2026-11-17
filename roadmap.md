@@ -16,3 +16,6 @@
 - [x] Re-import uploaded site ZIP; move all photos/videos to the CDN, shrink hero + services videos, add hero cover picture
 - [x] Videos load with the page (no waiting for scroll); sections appear before they scroll into view, faster entrances
 - [x] Fix code issues found in the import (lint error, outdated README notes)
+- [x] Home About: cleaner futuristic design + scroll-linked motion
+- [x] About background: clean animated background
+- [x] Smooth scrolling: remove scroll jank

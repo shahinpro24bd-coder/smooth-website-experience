@@ -40,3 +40,4 @@ use the editor.
 - The footer is intentionally calm: a dimmed slow background clip (FooterVideo, plays only on screen, hidden for reduced motion) plus one soft `.ft-in` fade per block inside Reveal; do not add looping or per-item footer animations.
 - The backend's site_content may hold an unedited copy of old built-in text; cms.ts savedFaqs/savedTexts skip those stale entries (site and admin), so update their stale lists when built-in defaults are rewritten.
 - Home About scroll motion is driven by --abp/--abd CSS vars written on scroll in HomeContent and applied via the individual `translate` property, so it stacks with reveal/hover transforms; keep new scroll effects on those vars.
+- Looping decorative animations animate only transform/opacity (no left/top, background-position, @property gradient spins or large blur filters), and SiteLayout pauses infinite animations in off-screen sections via the Web Animations API, so scrolling stays smooth.

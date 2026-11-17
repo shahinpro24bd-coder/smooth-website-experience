@@ -168,6 +168,17 @@ export function HomeContent() {
       <div ref={abRef} className={`band abm ${abIn || edit ? "is-in" : ""}`}>
         <div className="abm-grid" aria-hidden="true" />
         <div className="abm-glow" aria-hidden="true" />
+        <div className="abm-flow" aria-hidden="true">
+          {[{ r: 2, t: "8s", dl: "0s" }, { r: 5, t: "11s", dl: "-4s" }, { r: 9, t: "9.5s", dl: "-7s" }, { r: 12, t: "12s", dl: "-2s" }].map((l) => (
+            <span key={`h${l.r}`} className="abm-flow-h" style={{ ["--r" as string]: l.r, ["--t" as string]: l.t, ["--dl" as string]: l.dl }} />
+          ))}
+          {[{ c: 2, t: "10s", dl: "-3s" }, { c: 6, t: "8.5s", dl: "-6s" }, { c: 11, t: "12s", dl: "-1s" }, { c: 16, t: "9s", dl: "-5s" }].map((l) => (
+            <span key={`v${l.c}`} className="abm-flow-v" style={{ ["--c" as string]: l.c, ["--t" as string]: l.t, ["--dl" as string]: l.dl }} />
+          ))}
+          {[{ r: 2, c: 6, dl: "0s" }, { r: 9, c: 2, dl: "-1.5s" }, { r: 5, c: 11, dl: "-3s" }, { r: 12, c: 16, dl: "-2s" }].map((n) => (
+            <span key={`n${n.r}-${n.c}`} className="abm-node" style={{ ["--r" as string]: n.r, ["--c" as string]: n.c, ["--dl" as string]: n.dl }} />
+          ))}
+        </div>
         <div className="container position-relative">
           <div className="row g-5 align-items-center">
             <div className="col-lg-6">
