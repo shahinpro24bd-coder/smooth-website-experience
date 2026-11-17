@@ -28,3 +28,14 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+- Site photos and videos are Lovable asset pointers in src/assets (*.asset.json); import the pointer and use .url, so media loads from this project's CDN rather than from public/.
+- Every site video renders its src immediately with preload="auto" and a poster (never gate src on scroll), so clips are ready before the visitor reaches them.
+- Scroll entrances (useInView, Reveal, About) share REVEAL_MARGIN from Sections.tsx and start before a section enters the viewport; entrance delays are scaled by the --rv-pace CSS variable, so tune speed there rather than per element.
+- The site reads its content and admin data from the existing QMEP backend configured in .env (public URL + publishable key only); never put secret keys there.
+- Site styling is Bootstrap template CSS in public/vendor plus prefixed section classes in src/styles.css (e.g. .hx-* for the home hero); follow that pattern instead of Tailwind utilities so sections stay consistent.
+- Animated home sections share the `.mx` layer (useInView adds `is-in`; `.mx-rv` children reveal with `--d` delay; Kicker/SplitTitle in Sections.tsx); put `.mx-rv` on a wrapper, not on elements with their own transitions, so hover effects keep working.
+- The site navbar (Navbar in Layout.tsx, `.qn-*` in styles.css) is a floating glass pill; its sliding hover/active highlight is positioned from JS via CSS vars on `.qn-links` (--qn-x/--qn-w/--qn-o), so keep links as direct `.qn-link` children when editing it.
+- Keep the shared Process section as a semantic ordered timeline with CSS-only motion and reduced-motion overrides, so both home and services stay consistent without animation timers.
+- Inner pages and page banners animate through `Reveal` (src/components/site/Reveal.tsx): it adds `rx is-in` on scroll and `.rx-*` children play keyframe entrances with `backwards` fill and a `--d` delay (`dl()`), so hover styles keep working after the entrance; never nest Reveals, and keep the last element on a page inside a taller Reveal so it can trigger.
+- The footer is intentionally calm: a dimmed slow background clip (FooterVideo, plays only on screen, hidden for reduced motion) plus one soft `.ft-in` fade per block inside Reveal; do not add looping or per-item footer animations.
+- The backend's site_content may hold an unedited copy of old built-in text; cms.ts savedFaqs/savedTexts skip those stale entries (site and admin), so update their stale lists when built-in defaults are rewritten.

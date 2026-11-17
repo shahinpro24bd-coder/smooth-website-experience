@@ -1,0 +1,18 @@
+# Roadmap
+- [x] Import QMEP website
+- [x] Hero redesign: clearer, high-contrast, public-friendly layout
+- [x] Long hero background video: one clip per service (HVAC, Electrical, Plumbing, Maintenance, AMC, VRF), ~57s loop
+- [x] Re-make Maintenance, AMC, VRF as fully generated video clips (no still photos left in the hero)
+- [x] Hero clips remade with QMEP logo on uniform + cap: HVAC, Electrical, Plumbing
+- [x] Hero video: added Maintenance, AMC and VRF clips (QMEP logo on uniform + cap) after the 6 main service clips, ~66s loop
+- [x] Why Choose Us section: more modern/animated, same colours and content
+- [x] Navbar redesign: modern floating glass bar, rounded, animated
+- [x] Hero rebuilt to brief: "Engineering Solutions You Can Trust", Get a Quote / Our Services, trust bar
+- [x] Our Work Process: modern light timeline, animated connectors and staggered step reveals
+- [x] Animate every section on all pages, including page banners, topbar and footer
+- [x] Footer: calmer, modern — light background video, one soft fade-in, no busy effects
+- [ ] Hero video: add 6 more clips (plumbing drainage/sanitary, ductwork, lighting/containment, sprinklers, CCTV/access control, partitions) — blocked: out of credits; stills ready
+- [ ] Full website ZIP (photos, videos, admin) under 20 MB in Files — on hold: user re-uploaded the source; make one only if asked again
+- [x] Re-import uploaded site ZIP; move all photos/videos to the CDN, shrink hero + services videos, add hero cover picture
+- [x] Videos load with the page (no waiting for scroll); sections appear before they scroll into view, faster entrances
+- [x] Fix code issues found in the import (lint error, outdated README notes)
