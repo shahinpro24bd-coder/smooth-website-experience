@@ -117,11 +117,10 @@ export function HomeContent() {
       <div className="pb-5"></div>
 
 
-      {/* About — modern animated layout with a thick animated frame playing an electromechanical video */}
+      {/* About — clean, futuristic layout: HUD-framed video, spec-style feature grid */}
       <div ref={abRef} className={`band abm ${abIn || edit ? "is-in" : ""}`}>
         <div className="abm-grid" aria-hidden="true" />
-        <div className="abm-orb abm-orb-a" aria-hidden="true" />
-        <div className="abm-orb abm-orb-b" aria-hidden="true" />
+        <div className="abm-glow" aria-hidden="true" />
         <div className="container position-relative">
           <div className="row g-5 align-items-center">
             <div className="col-lg-6">
@@ -131,21 +130,29 @@ export function HomeContent() {
                     <video className="abm-video" src={get("home.about.video", aboutVideoAsset.url)} poster={get("home.about.img1", aboutPosterAsset.url)} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
                     <span className="abm-scan" aria-hidden="true" />
                     <span className="abm-live"><span className="abm-live-dot" /> <T k="home.about.live" d="On Site · UAE" line /></span>
+                    <div className="abm-hud">
+                      <div className="abm-badge">
+                        <span className="abm-badge-num"><T k="home.about.badgeNum" d="20" line /><sup>+</sup></span>
+                        <span className="abm-badge-text"><small><T k="home.about.badge1" d="Years of" line /></small><strong><T k="home.about.badge2" d="Excellence" line /></strong></span>
+                      </div>
+                      <span className="abm-hud-meta" aria-hidden="true"><span>QMEP</span><span>Dubai · UAE</span></span>
+                    </div>
                     {edit && (
                       <button type="button" className="cms-hero-pick" onClick={() => pick("home.about.img1")}><i className="fa fa-image me-2"></i>Change video poster</button>
                     )}
                   </div>
+                  <span className="abm-corner abm-corner-tl" aria-hidden="true" />
+                  <span className="abm-corner abm-corner-tr" aria-hidden="true" />
+                  <span className="abm-corner abm-corner-bl" aria-hidden="true" />
+                  <span className="abm-corner abm-corner-br" aria-hidden="true" />
                 </div>
-                <Img k="home.about.img2" d={about2} className="abm-sub rv" style={{ ["--d" as string]: "250ms" }} alt="QMEP technician installing an AC unit" />
-                <div className="abm-badge rv" style={{ ["--d" as string]: "400ms" }}>
-                  <span className="abm-badge-num"><T k="home.about.badgeNum" d="20" line /></span>
-                  <span className="abm-badge-text"><small><T k="home.about.badge1" d="Years of" line /></small><strong><T k="home.about.badge2" d="Excellence" line /></strong></span>
+                <div className="abm-sub-wrap rv" style={{ ["--d" as string]: "250ms" }}>
+                  <Img k="home.about.img2" d={about2} className="abm-sub" alt="QMEP technician installing an AC unit" />
                 </div>
-                <span className="abm-vert" aria-hidden="true">QMEP · Dubai · UAE</span>
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="abm-kicker rv" style={{ ["--d" as string]: "100ms" }}><span className="abm-kicker-dot" aria-hidden="true" /><span><T k="home.about.kicker" d="About QMEP" line /></span></div>
+              <div className="abm-kicker rv" style={{ ["--d" as string]: "100ms" }}><span className="abm-kicker-idx" aria-hidden="true">01</span><span className="abm-kicker-line" aria-hidden="true" /><span><T k="home.about.kicker" d="About QMEP" line /></span></div>
               <h2 className="abm-title rv" style={{ ["--d" as string]: "200ms" }}>
                 {edit ? <T k="home.about.title" d={aboutTitle} /> : (() => {
                   const w = get("home.about.title", aboutTitle).trim().split(/\s+/);
@@ -155,19 +162,19 @@ export function HomeContent() {
               </h2>
               <p className="abm-lead rv" style={{ ["--d" as string]: "300ms" }}><T k="home.about.lead" d="Established in 2007, QMEP Electromechanical and Interior Works LLC is an experienced MEP contracting company committed to delivering reliable engineering solutions for the UAE construction industry." /></p>
               <p className="abm-text rv" style={{ ["--d" as string]: "380ms" }}><T k="home.about.text" d="Our approach combines engineering knowledge, professional project management, skilled resources and rigorous quality control to ensure every project is executed with precision, efficiency and accountability." /></p>
-              <div className="row g-3 mb-4">
+              <ul className="abm-specs">
                 {[
                   { icon: "fa-award", text: "Quality Workmanship" },
                   { icon: "fa-stopwatch", text: "Timely Execution" },
                   { icon: "fa-handshake", text: "Lasting Client Relationships" },
                   { icon: "fa-clipboard-check", text: "Rigorous Quality Control" },
                 ].map((f, fi) => (
-                  <div key={f.text} className="col-sm-6">
-                    <div className="abm-check rv" style={{ ["--d" as string]: `${460 + fi * 90}ms` }}><i className={`fa ${f.icon}`}></i><span className="abm-check-text"><T k={`home.about.f${fi}`} d={f.text} /></span><span className="abm-check-num" aria-hidden="true">0{fi + 1}</span></div>
-                  </div>
+                  <li key={f.text} className="rv" style={{ ["--d" as string]: `${460 + fi * 80}ms` }}>
+                    <div className="abm-spec"><span className="abm-spec-ico" aria-hidden="true"><i className={`fa ${f.icon}`}></i></span><span className="abm-spec-text"><T k={`home.about.f${fi}`} d={f.text} /></span><span className="abm-spec-num" aria-hidden="true">0{fi + 1}</span></div>
+                  </li>
                 ))}
-              </div>
-              <div className="abm-actions rv" style={{ ["--d" as string]: "820ms" }}>
+              </ul>
+              <div className="abm-actions rv" style={{ ["--d" as string]: "800ms" }}>
                 <Link className="abm-btn abm-btn-primary" to="/services"><span><T k="home.about.btn1" d="Discover Our Services" line /></span><span className="abm-btn-ico" aria-hidden="true"><i className="fa fa-arrow-right"></i></span></Link>
                 <Link className="abm-btn abm-btn-ghost" to="/about"><T k="home.about.btn2" d="More About Us" line /></Link>
               </div>
