@@ -62,6 +62,53 @@ export function HomeContent() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
+  // Scroll-linked motion: write the About section's scroll progress into CSS vars
+  // (--abp 0→1 as it passes through the viewport, --abd 0 at centre → 1 at edges); CSS does the rest.
+  useEffect(() => {
+    const el = abRef.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      el.style.setProperty("--abp", p.toFixed(4));
+      el.style.setProperty("--abd", Math.min(1, Math.abs(p - 0.5) * 2).toFixed(4));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  // "20+ years" counts up once the video's info bar is actually on screen.
+  const badgeRaw = get("home.about.badgeNum", "20");
+  const badgeTarget = /^\d+$/.test(badgeRaw.trim()) ? parseInt(badgeRaw, 10) : null;
+  const hudRef = useRef<HTMLDivElement>(null);
+  const [badgeCount, setBadgeCount] = useState<number | null>(null);
+  useEffect(() => {
+    const el = hudRef.current;
+    if (edit || badgeTarget === null || !el || typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) return; // already visible: just show the number
+    setBadgeCount(0);
+    let raf = 0;
+    const io = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 1600);
+        setBadgeCount(Math.round(badgeTarget * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) raf = requestAnimationFrame(tick); else setBadgeCount(null);
+      };
+      raf = requestAnimationFrame(tick);
+    }, { threshold: 0.6 });
+    io.observe(el);
+    return () => { io.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, [edit, badgeTarget]);
   const [pjRef, pjIn] = useInView<HTMLElement>(0.1);
   const cur = tabs[tab]!;
   return (
@@ -130,9 +177,9 @@ export function HomeContent() {
                     <video className="abm-video" src={get("home.about.video", aboutVideoAsset.url)} poster={get("home.about.img1", aboutPosterAsset.url)} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
                     <span className="abm-scan" aria-hidden="true" />
                     <span className="abm-live"><span className="abm-live-dot" /> <T k="home.about.live" d="On Site · UAE" line /></span>
-                    <div className="abm-hud">
+                    <div className="abm-hud" ref={hudRef}>
                       <div className="abm-badge">
-                        <span className="abm-badge-num"><T k="home.about.badgeNum" d="20" line /><sup>+</sup></span>
+                        <span className="abm-badge-num">{badgeCount !== null ? badgeCount : <T k="home.about.badgeNum" d="20" line />}<sup>+</sup></span>
                         <span className="abm-badge-text"><small><T k="home.about.badge1" d="Years of" line /></small><strong><T k="home.about.badge2" d="Excellence" line /></strong></span>
                       </div>
                       <span className="abm-hud-meta" aria-hidden="true"><span>QMEP</span><span>Dubai · UAE</span></span>
@@ -151,13 +198,14 @@ export function HomeContent() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-6">
+            <div className="col-lg-6 abm-copy">
               <div className="abm-kicker rv" style={{ ["--d" as string]: "100ms" }}><span className="abm-kicker-idx" aria-hidden="true">01</span><span className="abm-kicker-line" aria-hidden="true" /><span><T k="home.about.kicker" d="About QMEP" line /></span></div>
-              <h2 className="abm-title rv" style={{ ["--d" as string]: "200ms" }}>
+              <h2 className={`abm-title ${edit ? "" : "abm-title-split"}`}>
                 {edit ? <T k="home.about.title" d={aboutTitle} /> : (() => {
                   const w = get("home.about.title", aboutTitle).trim().split(/\s+/);
-                  const last = w.pop();
-                  return <>{w.join(" ")}{w.length ? " " : ""}<em className="abm-accent">{last}</em></>;
+                  return w.map((word, wi) => (
+                    <span key={wi}><span className="abm-w"><span className={wi === w.length - 1 ? "abm-accent" : undefined} style={{ ["--i" as string]: wi }}>{word}</span></span>{wi < w.length - 1 ? " " : ""}</span>
+                  ));
                 })()}
               </h2>
               <p className="abm-lead rv" style={{ ["--d" as string]: "300ms" }}><T k="home.about.lead" d="Established in 2007, QMEP Electromechanical and Interior Works LLC is an experienced MEP contracting company committed to delivering reliable engineering solutions for the UAE construction industry." /></p>

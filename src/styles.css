@@ -1326,6 +1326,36 @@ small, .small { color: #5A6472; }
 .abm-btn-ghost { color: var(--dark); background: rgba(255,255,255,.6); border: 1px solid rgba(37,37,37,.18); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .abm-btn-ghost:hover { color: var(--primary); border-color: var(--primary); background: #FFFFFF; }
 
+/* --- Scroll-linked motion (HomeContent writes --abp / --abd on scroll) ---
+   Uses the individual `translate` property so it stacks with reveal/hover transforms without lag. */
+.abm { --abp: .5; --abd: 0; }
+.abm-grid { background-position: 0 calc(var(--abp) * 128px); }
+.abm-glow { translate: calc(var(--abp) * -120px) calc(var(--abp) * 260px); }
+.abm-video { transform: scale(1.12); translate: 0 calc((var(--abp) - .5) * 60px); }
+.abm-frame:hover .abm-video { transform: scale(1.16); }
+.abm-sub { translate: 0 calc((var(--abp) - .5) * -110px); }
+.abm-copy { translate: 0 calc((var(--abp) - .5) * -36px); }
+.abm-hud { translate: 0 calc(var(--abd) * 18px); }
+/* corner brackets drift outward away from centre and lock onto the frame as it centres */
+.abm-corner-tl { translate: calc(var(--abd) * -16px) calc(var(--abd) * -16px); }
+.abm-corner-tr { translate: calc(var(--abd) * 16px) calc(var(--abd) * -16px); }
+.abm-corner-bl { translate: calc(var(--abd) * -16px) calc(var(--abd) * 16px); }
+.abm-corner-br { translate: calc(var(--abd) * 16px) calc(var(--abd) * 16px); }
+/* kicker line fills with scroll progress */
+.abm-kicker-line { position: relative; width: 56px; background: rgba(30,99,214,.18); }
+.abm-kicker-line::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--primary), var(--abm-cyan)); transform-origin: left;
+  transform: scaleX(clamp(0, calc((var(--abp) - .15) * 3), 1)); }
+/* spec grid top rule draws in with scroll */
+.abm-specs { position: relative; border-top-color: transparent; }
+.abm-specs::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, var(--primary), var(--abm-cyan) 40%, var(--abm-line) 70%);
+  transform-origin: left; transform: scaleX(clamp(0, calc((var(--abp) - .2) * 2.6), 1)); }
+
+/* Title: words rise out of a mask one after another */
+.abm-title-split .abm-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+.abm-title-split .abm-w > span { display: inline-block; transform: translateY(110%); opacity: 0; filter: blur(6px);
+  transition: transform .9s cubic-bezier(.2,.8,.2,1), opacity .6s ease, filter .7s ease; transition-delay: calc((180ms + var(--i) * 55ms) * var(--rv-pace) * 2); }
+.abm.is-in .abm-title-split .abm-w > span { transform: none; opacity: 1; filter: none; }
+
 /* Staggered reveal once the section scrolls into view */
 .abm .rv { opacity: 0; transform: translateY(20px); transition: opacity .55s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--d, 0ms) * var(--rv-pace)); }
 .abm .abm-frame.rv { transform: translateY(30px) scale(.98); }
@@ -1359,7 +1389,8 @@ small, .small { color: #5A6472; }
 }
 @media (prefers-reduced-motion: reduce) {
   .abm *, .abm *::before, .abm *::after { animation: none !important; }
-  .abm .rv, .abm .abm-corner { opacity: 1; transform: none; transition: none; }
+  .abm .rv, .abm .abm-corner, .abm-title-split .abm-w > span { opacity: 1; transform: none; filter: none; transition: none; }
+  .abm * { translate: none !important; }
   .abm-scan { display: none; }
 }
 
