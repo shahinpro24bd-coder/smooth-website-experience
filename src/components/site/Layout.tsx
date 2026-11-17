@@ -1,7 +1,8 @@
 import { T, useEditable } from "@/lib/editable";
 import qmepLogo from "@/assets/qmep-logo.png.asset.json";
-import footerVideoAsset from "@/assets/services-bg.mp4.asset.json";
-import footerPosterAsset from "@/assets/services-bg-poster.jpg.asset.json";
+import footerVideoAsset from "@/assets/services-bg-hd.mp4.asset.json";
+import footerPosterAsset from "@/assets/services-bg-hd-poster.webp.asset.json";
+import { SiteVideo } from "@/components/site/SiteVideo";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { company, services } from "@/lib/site";
@@ -252,7 +253,7 @@ function FooterVideo() {
   }, []);
   return (
     <div className="ft-media" aria-hidden="true">
-      <video ref={ref} className="ft-video" src={footerVideoAsset.url} poster={footerPosterAsset.url} muted loop playsInline preload="auto" />
+      <SiteVideo videoRef={ref} autoPlay={false} className="ft-video" mp4={footerVideoAsset.url} poster={footerPosterAsset.url} />
     </div>
   );
 }

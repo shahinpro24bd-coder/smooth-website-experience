@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent, type PointerEvent as RPointerEvent } from "react";
-import servicesVideoAsset from "@/assets/services-bg.mp4.asset.json";
-import servicesPosterAsset from "@/assets/services-bg-poster.jpg.asset.json";
-import whyVideoAsset from "@/assets/why-engineer.mp4.asset.json";
-import whyPosterAsset from "@/assets/why-engineer-poster.jpg.asset.json";
+import servicesVideoAsset from "@/assets/services-bg-hd.mp4.asset.json";
+import servicesPosterAsset from "@/assets/services-bg-hd-poster.webp.asset.json";
+import whyVideoAsset from "@/assets/why-engineer-hd.mp4.asset.json";
+import whyPosterAsset from "@/assets/why-engineer-hd-poster.webp.asset.json";
+import legacyWhyPoster from "@/assets/legacy/why-engineer-poster.jpg.asset.json";
+import { SiteVideo } from "@/components/site/SiteVideo";
 import { company, faqs, processSteps, services, whyUs } from "@/lib/site";
 import about1Asset from "@/assets/about-1.webp.asset.json";
 const about1 = about1Asset.url;
@@ -31,7 +33,7 @@ export function ServicesGrid() {
   return (
     <section ref={ref} className={`band svx ${inView || edit ? "is-in" : ""}`}>
       <div className="svx-fx" aria-hidden="true">
-        <video className="svx-video" src={servicesVideoAsset.url} poster={servicesPosterAsset.url} autoPlay muted loop playsInline preload="auto" />
+        <SiteVideo className="svx-video" mp4={servicesVideoAsset.url} poster={servicesPosterAsset.url} />
         <span className="svx-wash" />
         <span className="svx-gridbg" />
         <span className="svx-scan" />
@@ -207,7 +209,7 @@ export function WhyUs() {
               <div className="wcx-stage">
                 <div className="wcx-frame wcx-rv" style={{ ["--d" as string]: "150ms" }}>
                   <div className="wcx-frame-inner">
-                    <video className="wcx-video" src={whyVideoAsset.url} poster={get("why.img1", whyPosterAsset.url)} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
+                    <SiteVideo className="wcx-video" mp4={whyVideoAsset.url} poster={(() => { const v = get("why.img1", ""); return v && v !== legacyWhyPoster.url ? v : whyPosterAsset.url; })()} />
                     <span className="wcx-scan" aria-hidden="true" />
                     <span className="wcx-corner wcx-c-tl" aria-hidden="true" />
                     <span className="wcx-corner wcx-c-tr" aria-hidden="true" />
