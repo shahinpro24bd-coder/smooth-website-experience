@@ -1209,6 +1209,14 @@ small, .small { color: #5A6472; }
 
 @keyframes hxZoom { from { transform: scale(1.1); filter: brightness(.6); } to { transform: scale(1); filter: none; } }
 @keyframes hxRise { from { transform: translateY(110%); } to { transform: none; } }
+@keyframes hxOut { from { transform: none; opacity: 1; } to { transform: translateY(-110%); opacity: 0; } }
+/* Rotating headline: slogans share one grid cell (height = tallest); only .is-on is visible, .is-out slides away */
+.hx-slogans { display: grid; }
+.hx-slogan { grid-area: 1 / 1; display: block; }
+.hx-slogan:not(.is-on) .hx-line > span { animation: none; transform: translateY(110%); }
+.hx-slogan.is-out .hx-line > span { animation: hxOut .65s cubic-bezier(.6,0,.4,1) both; animation-delay: var(--d, 0ms); }
+.hx-slogan:not(.is-on):not(.is-out) { visibility: hidden; }
+.hx-slogans.is-edit { display: flex; flex-direction: column; gap: .4rem; }
 @keyframes hxUp { from { transform: translateY(22px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes hxPulse { 0% { box-shadow: 0 0 0 0 rgba(61,220,151,.6); } 100% { box-shadow: 0 0 0 9px rgba(61,220,151,0); } }
 

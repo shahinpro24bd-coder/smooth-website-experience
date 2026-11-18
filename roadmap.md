@@ -19,3 +19,6 @@
 - [x] Home About: cleaner futuristic design + scroll-linked motion
 - [x] About background: clean animated background
 - [x] Smooth scrolling: remove scroll jank
+- [x] Hero headline rotates: Where Quality Meets Speed → 20 Years of MEP Excellence → MEP Contractor of Choice → Quality in Every Detail
+- [x] Hero video: Electrical clip now shows a different worker (young South Asian electrician)
+- [ ] Hero video: swap the worker in 5 more clips (Plumbing, Fire, Office ceiling, Pump room, AC villa) — blocked: out of video credits; new worker photos ready

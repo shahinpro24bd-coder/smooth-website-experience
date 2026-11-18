@@ -12,9 +12,9 @@ import amcImgAsset from "@/assets/service-amc.webp.asset.json";
 const amcImg = amcImgAsset.url;
 import maintImgAsset from "@/assets/service-maintenance.webp.asset.json";
 const maintImg = maintImgAsset.url;
-import heroVideoAsset from "@/assets/hero-services-hd.mp4.asset.json";
-import heroVideoAv1Asset from "@/assets/hero-services-hd.av1.mp4.asset.json";
-import heroVideoMobileAsset from "@/assets/hero-services-mobile.mp4.asset.json";
+import heroVideoAsset from "@/assets/hero-team-hd.mp4.asset.json";
+import heroVideoAv1Asset from "@/assets/hero-team-hd.av1.mp4.asset.json";
+import heroVideoMobileAsset from "@/assets/hero-team-mobile.mp4.asset.json";
 import heroPosterAsset from "@/assets/hero-services-hd-poster.webp.asset.json";
 import aboutVideoAsset from "@/assets/about-electromechanical-hd.mp4.asset.json";
 import aboutPosterAsset from "@/assets/about-electromechanical-hd-poster.webp.asset.json";
@@ -61,6 +61,44 @@ const audiences = [
   },
 ];
 
+
+// Hero headline slogans: they take turns on the first screen (first one keeps the original admin keys).
+const HERO_SLOGANS = [
+  { k: "home.hero.h1", a: "Where Quality", b: "Meets", c: "Speed." },
+  { k: "home.hero.s2", a: "20 Years of", b: "MEP", c: "Excellence." },
+  { k: "home.hero.s3", a: "MEP Contractor", b: "of", c: "Choice." },
+  { k: "home.hero.s4", a: "Quality in", b: "Every", c: "Detail." },
+];
+const HERO_SLOGAN_MS = 4200;
+
+/** Rotating hero headline: each slogan's lines rise in, then slide up and out as the next one arrives. */
+function HeroTitle({ edit }: { edit: boolean }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (edit) return;
+    const id = window.setInterval(() => { if (!document.hidden) setTick((t) => t + 1); }, HERO_SLOGAN_MS);
+    return () => window.clearInterval(id);
+  }, [edit]);
+  const n = HERO_SLOGANS.length;
+  const cur = tick % n;
+  const prev = tick > 0 ? (tick - 1) % n : -1;
+  return (
+    <h1 className={`hx-title hx-slogans${edit ? " is-edit" : ""}`}>
+      {HERO_SLOGANS.map((s, i) => {
+        const on = edit || i === cur;
+        const out = !edit && i === prev;
+        // First appearance keeps the page-load stagger; later swaps are quicker.
+        const d = tick === 0 ? ["120ms", "220ms"] : out ? ["0ms", "70ms"] : ["180ms", "270ms"];
+        return (
+          <span key={s.k} className={`hx-slogan${on ? " is-on" : ""}${out ? " is-out" : ""}`} aria-hidden={on ? undefined : true}>
+            <span className="hx-line"><span style={{ ["--d" as string]: d[0] }}><T k={`${s.k}a`} d={s.a} line /></span></span>
+            <span className="hx-line"><span style={{ ["--d" as string]: d[1] }}><T k={`${s.k}b`} d={s.b} line /> <em className="hx-accent"><T k={`${s.k}c`} d={s.c} line /></em></span></span>
+          </span>
+        );
+      })}
+    </h1>
+  );
+}
 
 export function HomeContent() {
   const { edit, get, pick } = useEditable();
@@ -138,10 +176,7 @@ export function HomeContent() {
               <span className="hx-kicker-dot" aria-hidden="true" />
               <T k="home.hero.kicker" d="20 Years of Excellence in MEP" line />
             </span>
-            <h1 className="hx-title">
-              <span className="hx-line"><span style={{ ["--d" as string]: "120ms" }}><T k="home.hero.h1a" d="Where Quality" line /></span></span>
-              <span className="hx-line"><span style={{ ["--d" as string]: "220ms" }}><T k="home.hero.h1b" d="Meets" line /> <em className="hx-accent"><T k="home.hero.h1c" d="Speed." line /></em></span></span>
-            </h1>
+            <HeroTitle edit={edit} />
             <p className="hx-sub hx-in" style={{ ["--d" as string]: "380ms" }}>
               {(["Mechanical", "Electrical", "Plumbing"] as const).map((w, n) => (
                 <span key={w} className="hx-sub-item"><T k={`home.hero.sub${n}`} d={w} line /></span>
